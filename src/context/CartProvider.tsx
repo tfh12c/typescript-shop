@@ -39,13 +39,13 @@ const reducer = (state: CartStateType, action: ReducerAction): CartStateType => 
             //destructure what we need:
             const { sku, name, price } = action.payload
 
-            //filter cart, items we are not updating
+            //filter cart to avoid duplicates of the same item (if we add same item twice, there wont be two of them in cart, we just want quantity to go up)
             const filteredCart: CartItemType[] = state.cart.filter(item => item.sku !== sku)
 
             //check for item exists
             const itemExists: CartItemType | undefined = state.cart.find(item => item.sku === sku)
 
-            //set qty for item
+            //set qty for item. if item exists, we up the quantity by one, otherwise item does not currently exist and we increase qty by 1
             const qty: number = itemExists ? itemExists.qty + 1 : 1
 
             return { ...state, cart: [ ...filteredCart, { sku, name, price, qty }]}
